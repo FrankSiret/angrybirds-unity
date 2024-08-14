@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Peg : MonoBehaviour {
     public LineRenderer[] lineRenderers;
@@ -25,6 +26,17 @@ public class Peg : MonoBehaviour {
 
     public float force;
 
+    public GameObject victory;
+
+    private bool _won = false;
+
+    // find all enemies in the scene
+    private int enemiesAlive {
+        get {
+            return FindObjectsOfType<Pig>().Length;
+        }
+    }
+
     void Start() {
         lineRenderers[0].positionCount = 2;
         lineRenderers[1].positionCount = 2;
@@ -41,7 +53,7 @@ public class Peg : MonoBehaviour {
 
         bird.isKinematic = true;
 
-        ResetStrips();
+        ResetLines();
     }
 
     void Update() {
@@ -54,13 +66,26 @@ public class Peg : MonoBehaviour {
 
             currentPosition = ClampBoundary(currentPosition);
 
-            SetStrips(currentPosition);
+            SetLines(currentPosition);
 
             if (birdCollider) {
                 birdCollider.enabled = true;
             }
         } else {
-            ResetStrips();
+            ResetLines();
+        }
+
+        if(!_won && enemiesAlive <= 0) {
+            Debug.Log("You win!");
+            _won = true;
+        }
+
+        if(_won) {
+            Bird bird = FindAnyObjectByType<Bird>();
+            bool noBodyMoving = bird == null || bird.noBodyMoving(false);
+            if(noBodyMoving) {
+                StartCoroutine(WaitAndReload());
+            }
         }
     }
 
@@ -86,12 +111,12 @@ public class Peg : MonoBehaviour {
         Invoke("CreateBird", 2);
     }
 
-    void ResetStrips() {
+    void ResetLines() {
         currentPosition = initialPosition.position;
-        SetStrips(currentPosition);
+        SetLines(currentPosition);
     }
 
-    void SetStrips(Vector3 position) {
+    void SetLines(Vector3 position) {
         lineRenderers[0].SetPosition(1, position);
         lineRenderers[1].SetPosition(1, position);
 
@@ -105,5 +130,10 @@ public class Peg : MonoBehaviour {
     Vector3 ClampBoundary(Vector3 vector) {
         vector.y = Mathf.Clamp(vector.y, bottomBoundary, 1000);
         return vector;
+    }
+
+    IEnumerator WaitAndReload() {
+        yield return new WaitForSeconds(3);
+        Instantiate(victory, new Vector3(-0.52f, 2.96f, 0), Quaternion.identity);
     }
 }
