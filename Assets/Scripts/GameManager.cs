@@ -20,12 +20,18 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject _restartScreenObject;
 
-    [SerializeField] private SlightShot _slightShot;
+    [SerializeField] private SlingShot _slingShot;
+
+    [Header("Scripts")]
+    [SerializeField] private CameraManager _cameraManager;
 
     private bool _ending = false;
     private bool _started = false;
 
+    private int _points = 0;
+
     public void Start() {
+        _points = 0;
         _restartScreenObject.SetActive(false);
         Instantiate(sceneTransition, Vector3.zero, Quaternion.identity);
     }
@@ -42,6 +48,10 @@ public class GameManager : MonoBehaviour
     public bool IsFinish() {
         return _ending;
     }
+
+    private void Update() {
+        Debug.Log("Points: " + _points);
+    } 
 
     private void Awake() {
         if (instance == null) {
@@ -71,25 +81,19 @@ public class GameManager : MonoBehaviour
 
         for(int i = 0; i < pigs.Length; i++) {
             if(pigs[i].GetComponent<Rigidbody2D>().velocity.magnitude >= 0.1f) {
-                // Debug.Log("pig velocity: " + pigs[i].GetComponent<Rigidbody2D>().velocity.magnitude);
                 return false;
             }
         }
         for(int i = 0; i < glasses.Length; i++) {
             if(glasses[i].GetComponent<Rigidbody2D>().velocity.magnitude >= 0.1f) {
-                // Debug.Log("glass velocity: " + glasses[i].GetComponent<Rigidbody2D>().velocity.magnitude);
                 return false;
             }
-        }
-        if (checkBird && bird != null && bird.velocity.magnitude >= 0.1f) {
-            // Debug.Log("bird velocity: " + bird.velocity.magnitude);
         }
         return !checkBird || bird == null || bird.velocity.magnitude < 0.1f;
     }
 
     private void LateUpdate() {
         if(!_ending && _usedNumberOfShots == MaxNumberOfShots) {
-            Debug.Log("Checking for last shot");
             bool collided = true;
             Bird bird = FindObjectOfType<Bird>();
             if(bird != null) {
@@ -106,8 +110,6 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator CheckAfterWaitTime() {
         yield return new WaitForSeconds(3f);
-
-        Debug.Log("Checking for last shot");
         
         if(_pigs.Count == 0) {
             WinGame();
@@ -117,8 +119,11 @@ public class GameManager : MonoBehaviour
     }
 
     public void RemovePig(Pig pig) {
-        _pigs.Remove(pig);
-        CheckForAllDeadPig();
+        bool removed = _pigs.Remove(pig);
+        if(removed) {
+            _points += 5000;
+            CheckForAllDeadPig();
+        }
     }
 
     private void CheckForAllDeadPig() {
@@ -133,29 +138,38 @@ public class GameManager : MonoBehaviour
         WinGame();
     }
 
-    public void EnabledSlightShot(bool enabled) {
+    public void EnabledSlingShot(bool enabled) {
         if(!_started && enabled) {
             return;
         }
         if(_ending && enabled) {
             return;
         }
-        _slightShot.enabled = enabled;
+        _slingShot.enabled = enabled;
     }
 
     #region Win/Lose
 
     public void WinGame() {
         Debug.Log("You win!");
-        EnabledSlightShot(false);
+        EnabledSlingShot(false);
+        
+        _cameraManager.SwitchToIdleCamera();
+
+        _restartScreenObject.SetActive(true);
+    }
+    
+    public void LoseGame() {
+        Debug.Log("You lose!");
+        EnabledSlingShot(false);
+        
+        _cameraManager.SwitchToIdleCamera();
 
         _restartScreenObject.SetActive(true);
     }
 
-    public void LoseGame() {
-        Debug.Log("You lose!");
-        EnabledSlightShot(false);
-
+    public void RestartGame() {
+        Debug.Log("Restart game!");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 

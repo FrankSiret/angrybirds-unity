@@ -7,6 +7,8 @@ public class Bird : MonoBehaviour {
     [SerializeField] private AudioClip[] _hitClips;
 
     private AudioSource _audioSource;
+    public GameObject destroyEffect;
+
     private bool _collided;
 
     private bool _sent;
@@ -47,19 +49,25 @@ public class Bird : MonoBehaviour {
         Rigidbody2D bird = GetComponent<Rigidbody2D>();
         if(bird == null) return;
 
-        // Debug.Log($"MOVING : {_collided && GameManager.instance.NoBodyMoving(true)}");
-
         if (!_sent && _collided && GameManager.instance.NoBodyMoving(true) ) {
             _sent = true;
-            Camera.main.GetComponent<Camara>().ResetPosition();
-            Destroy(gameObject, 2);
+            StartCoroutine(ResetPositionCoroutine());
         }
 
         // if bird is off the scene then destroy it
         if (!_sent && transform.position.y < -6 && GameManager.instance.NoBodyMoving(false)) {
             _sent = true;
-            Camera.main.GetComponent<Camara>().ResetPosition();
-            Destroy(gameObject, 2);
+            StartCoroutine(ResetPositionCoroutine());
+        }
+    }
+
+    IEnumerator ResetPositionCoroutine() {
+        yield return new WaitForSeconds(2f);
+        Instantiate(destroyEffect, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+        if(GameManager.instance.HasEnoughShots()) {
+            SlingShot slingShot = FindObjectOfType<SlingShot>();
+            if(slingShot != null) slingShot.CreateBird();
         }
     }
 }

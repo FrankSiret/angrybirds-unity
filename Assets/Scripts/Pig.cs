@@ -12,22 +12,28 @@ public class Pig : MonoBehaviour
     private float _currentHealth;
     public GameObject deathEffect;
 
-    [SerializeField] public Sprite pigDamaged;
+    public GameObject pointEffect;
 
     [SerializeField] private AudioClip _deathClip;
 
+    private Animator _animator;
+
+    private bool _died = false;
+
     public void Awake() {
         _currentHealth = _maxHealth;
+        _animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(float damage) {
         _currentHealth -= damage;
 
         if(_currentHealth < _maxHealth / 2) {
-            GetComponent<SpriteRenderer>().sprite = pigDamaged;
+            _animator.SetBool("LowHealth", true);
         }
 
-        if(_currentHealth <= 0) {
+        if(!_died && _currentHealth <= 0) {
+            _died = true;
             Die();
         }
     }
@@ -50,6 +56,7 @@ public class Pig : MonoBehaviour
     private void Die() {
         GameManager.instance.RemovePig(this);
         Instantiate(deathEffect, transform.position, Quaternion.identity);
+        Instantiate(pointEffect, transform.position, Quaternion.identity);
         AudioSource.PlayClipAtPoint(_deathClip, transform.position);
         Destroy(gameObject);
     }

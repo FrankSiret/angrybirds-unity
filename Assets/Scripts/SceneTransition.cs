@@ -17,7 +17,7 @@ public class SceneTransition : MonoBehaviour {
     [SerializeField] private Vector3 endScale;
 
     private void Awake() {
-        GameManager.instance.EnabledSlightShot(false);
+        GameManager.instance.EnabledSlingShot(false);
     }
 
     private void OnMouseDown() {
@@ -28,7 +28,6 @@ public class SceneTransition : MonoBehaviour {
     }
 
     private IEnumerator Transition(bool started, string sceneString) {
-        // Debug.Log("Loading scene: Start");
         transition.SetActive(true);
         if (started) {
             yield return FillFade(1f, 0f, 0.5f);
@@ -42,7 +41,7 @@ public class SceneTransition : MonoBehaviour {
             yield return new WaitForSeconds(1f);
             SceneManager.LoadScene(sceneString);
         }
-        GameManager.instance.EnabledSlightShot(true);
+        GameManager.instance.EnabledSlingShot(true);
         RemoveScene();
     }
 

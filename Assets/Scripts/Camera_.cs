@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Camara : MonoBehaviour
+public class Camera_ : MonoBehaviour
 {
     [SerializeField] private float xCameraStop;
 
@@ -33,8 +33,8 @@ public class Camara : MonoBehaviour
         yield return new WaitForSeconds(2f);
         transform.position = _initialPosition;
         if(GameManager.instance.HasEnoughShots()) {
-            SlightShot slightShot = FindObjectOfType<SlightShot>();
-            if(slightShot != null) slightShot.CreateBird();
+            SlingShot slingShot = FindObjectOfType<SlingShot>();
+            if(slingShot != null) slingShot.CreateBird();
         }
     }
 }

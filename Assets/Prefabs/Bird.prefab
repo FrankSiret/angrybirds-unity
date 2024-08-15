@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5180095467511273178}
   - component: {fileID: 9197428290983605239}
   - component: {fileID: 3787509891611867918}
+  - component: {fileID: 7124927910399183359}
   m_Layer: 0
   m_Name: Bird
   m_TagString: Untagged
@@ -132,6 +133,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 709f5636c96a17e40985baba995a233e, type: 3}
   - {fileID: 8300000, guid: 660a7a9df793ce745868039133c8c4ee, type: 3}
   - {fileID: 8300000, guid: d6b3172459c487b408b7f36d076348f1, type: 3}
+  destroyEffect: {fileID: 4759993617501902446, guid: 14076c4110460af4d937231636fd95be,
+    type: 3}
 --- !u!60 &9197428290983605239
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -306,3 +309,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &7124927910399183359
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 552990144328371565}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 64c71cf499b781449b6e36da343b45f3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

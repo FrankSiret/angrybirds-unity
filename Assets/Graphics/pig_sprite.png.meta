@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -151,6 +151,90 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: pig_sprite_2
+      rect:
+        serializedVersion: 2
+        x: 620
+        y: 541
+        width: 99
+        height: 97
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33f9ad3a80788e0448f52aeb34ce8ff3
+      internalID: 1985727592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pig_sprite_3
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 541
+        width: 99
+        height: 97
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55d23b2497a1bbb4284b35863beab9a8
+      internalID: 857555761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pig_sprite_4
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 25
+        width: 99
+        height: 97
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd7b8cf4e1d8ea44f9cbaf99a021b594
+      internalID: 1125470363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pig_sprite_5
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 127
+        width: 99
+        height: 97
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eea2ad4f9690d5947b60983ce0dda67e
+      internalID: -461216646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -164,6 +248,10 @@ TextureImporter:
     nameFileIdTable:
       pig_sprite_0: -1572278006
       pig_sprite_1: -180861707
+      pig_sprite_2: 1985727592
+      pig_sprite_3: 857555761
+      pig_sprite_4: 1125470363
+      pig_sprite_5: -461216646
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

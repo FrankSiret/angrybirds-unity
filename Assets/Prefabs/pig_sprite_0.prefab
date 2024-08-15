@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7237932296791653516}
   - component: {fileID: 8478002903232570223}
   - component: {fileID: 3351691562470231254}
+  - component: {fileID: 8563747535088738213}
   m_Layer: 0
   m_Name: pig_sprite_0
   m_TagString: Untagged
@@ -202,5 +203,27 @@ MonoBehaviour:
   _damageThreshold: 0.5
   deathEffect: {fileID: 4759993617501902446, guid: 3e8a0c863bd91f7499ac4ec85672c0d3,
     type: 3}
-  pigDamaged: {fileID: -180861707, guid: 8baa33118a90c7a459244b1df9172c91, type: 3}
+  pointEffect: {fileID: 4759993617501902446, guid: 14926fbab323d714eb09d47ef0d3f192,
+    type: 3}
   _deathClip: {fileID: 8300000, guid: b113894b7681fb2498077d28daca8e60, type: 3}
+--- !u!95 &8563747535088738213
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5595653299276725435}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: df8dc514dbea71540b288f65a96ca7ca, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
