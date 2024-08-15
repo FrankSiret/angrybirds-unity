@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Canvas _canvas;
 
     [SerializeField] private GameObject _restartScreenObject;
+    [SerializeField] private GameObject _levelFailedScreenObject;
 
     [SerializeField] private SlingShot _slingShot;
 
@@ -165,7 +166,7 @@ public class GameManager : MonoBehaviour
         
         _cameraManager.SwitchToIdleCamera();
 
-        _restartScreenObject.SetActive(true);
+        _levelFailedScreenObject.SetActive(true);
     }
 
     public void RestartGame() {

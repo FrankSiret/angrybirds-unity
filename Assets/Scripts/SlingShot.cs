@@ -124,7 +124,6 @@ public class SlingShot : MonoBehaviour {
         _bird = null;
         _birdCollider = null;
 
-        // SetLines(center.position);
         AnimateSlingShot();
 
         GameManager.instance.EnabledSlingShot(false);
