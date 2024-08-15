@@ -16,41 +16,19 @@ public class SceneTransition : MonoBehaviour {
     [SerializeField] private Vector3 endRotation;
     [SerializeField] private Vector3 endScale;
 
-    private bool _started = false;
+    private void Awake() {
+        GameManager.instance.EnabledSlightShot(false);
+    }
 
-    // get _started
-    public bool isStarted {
-        get {
-            return _started;
+    private void OnMouseDown() {
+        if(!GameManager.instance.Started) {
+            GameManager.instance.Started = true;
+            StartCoroutine(Transition(true, ""));
         }
     }
 
-    private void Start() {
-        // gameObject.SetActive(true);
-        transform.localPosition = new Vector3(0, 0, 0);
-    }
-
-    // public void RestartGame() {
-    //     Debug.Log("Restarting game");
-    //     // get BoxCollider2D component
-    //     // GetComponent<BoxCollider2D>().enabled = true;
-    //     // gameObject.SetActive(true);
-    //     StartCoroutine(Transition(false, sceneToLoad));
-    // }
-
-    // void Update() {
-    //     if (Input.GetKeyDown(KeyCode.F1)) {
-    //         StartCoroutine(Transition(false, sceneToLoad));
-    //     }
-    // }
-
-    private void OnMouseDown() {
-        _started = true;
-        StartCoroutine(Transition(true, ""));
-    }
-
     private IEnumerator Transition(bool started, string sceneString) {
-        Debug.Log("Loading scene: Start");
+        // Debug.Log("Loading scene: Start");
         transition.SetActive(true);
         if (started) {
             yield return FillFade(1f, 0f, 0.5f);
@@ -63,14 +41,9 @@ public class SceneTransition : MonoBehaviour {
             // Load the next scene.
             yield return new WaitForSeconds(1f);
             SceneManager.LoadScene(sceneString);
-            // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
-        Debug.Log("Loading scene: End");
-        Destroy(gameObject);
-        // transform.localPosition = new Vector3(0, -70, 0);
-        // gameObject.SetActive(false);
-        // gameObject.GetComponent<Collider2D>().isTrigger = false;
-        // GetComponent<BoxCollider2D>().enabled = true;
+        GameManager.instance.EnabledSlightShot(true);
+        RemoveScene();
     }
 
     private IEnumerator FillFade(float alphaStart, float alphaEnd, float duration) {
@@ -118,6 +91,10 @@ public class SceneTransition : MonoBehaviour {
             transform.localRotation = Quaternion.Euler(startRotation);
             transform.localScale = startScale;
         }
+    }
+
+    private void RemoveScene() {
+        Destroy(gameObject);
     }
 
 }

@@ -30,7 +30,11 @@ public class Camara : MonoBehaviour
     }
 
     IEnumerator ResetPositionCoroutine() {
-        yield return new WaitForSeconds(2.25f);
+        yield return new WaitForSeconds(2f);
         transform.position = _initialPosition;
+        if(GameManager.instance.HasEnoughShots()) {
+            SlightShot slightShot = FindObjectOfType<SlightShot>();
+            if(slightShot != null) slightShot.CreateBird();
+        }
     }
 }

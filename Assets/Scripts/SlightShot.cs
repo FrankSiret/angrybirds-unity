@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Peg : MonoBehaviour {
+public class SlightShot : MonoBehaviour {
     public LineRenderer[] lineRenderers;
     public Transform[] stickPositions;
     public Transform center;
@@ -26,15 +26,15 @@ public class Peg : MonoBehaviour {
 
     public float force;
 
-    public GameObject victory;
+    
+    [Header("Sounds")]
+    [SerializeField] private AudioClip[] _elasticPulledClips;
+    [SerializeField] private AudioClip[] _elasticReleaseClips;
 
-    private bool _won = false;
+    private AudioSource _audioSource;
 
-    // find all enemies in the scene
-    private int enemiesAlive {
-        get {
-            return FindObjectsOfType<Pig>().Length;
-        }
+    void Awake() {
+        _audioSource = GetComponent<AudioSource>();
     }
 
     void Start() {
@@ -46,18 +46,27 @@ public class Peg : MonoBehaviour {
         CreateBird();
     }
 
-    void CreateBird() {
+    public void CreateBird() {
         bird = Instantiate(birdPrefab).GetComponent<Rigidbody2D>();
         birdCollider = bird.GetComponent<Collider2D>();
         birdCollider.enabled = false;
 
         bird.isKinematic = true;
 
-        ResetLines();
+        currentPosition = initialPosition.position;
+        SetLines(currentPosition);
+
+        GameManager.instance.EnabledSlightShot(true);
     }
 
     void Update() {
         if (isMouseDown) {
+
+            // play sound repeatedly
+            if (!_audioSource.isPlaying) {
+                SoundManager.instance.PlayRandomClip(_elasticPulledClips, _audioSource);
+            }
+
             Vector3 mousePosition = Input.mousePosition;
             mousePosition.z = 10;
 
@@ -72,34 +81,28 @@ public class Peg : MonoBehaviour {
                 birdCollider.enabled = true;
             }
         } else {
-            ResetLines();
-        }
-
-        if(!_won && enemiesAlive <= 0) {
-            Debug.Log("You win!");
-            _won = true;
-        }
-
-        if(_won) {
-            Bird bird = FindAnyObjectByType<Bird>();
-            bool noBodyMoving = bird == null || bird.noBodyMoving(false);
-            if(noBodyMoving) {
-                StartCoroutine(WaitAndReload());
-            }
+            currentPosition = initialPosition.position;
         }
     }
 
     private void OnMouseDown() {
         isMouseDown = true;
+        // SoundManager.instance.PlayClip(_elasticPulledClip, _audioSource);
     }
 
     private void OnMouseUp() {
         isMouseDown = false;
+        if(bird == null) return;
         Shoot();
         currentPosition = initialPosition.position;
     }
 
     void Shoot() {
+
+        GameManager.instance.UseShot();
+
+        SoundManager.instance.PlayRandomClip(_elasticReleaseClips, _audioSource);
+        
         bird.isKinematic = false;
         Vector3 birdForce = (currentPosition - center.position) * force * -1;
         bird.velocity = birdForce;
@@ -108,12 +111,10 @@ public class Peg : MonoBehaviour {
 
         bird = null;
         birdCollider = null;
-        Invoke("CreateBird", 2);
-    }
 
-    void ResetLines() {
-        currentPosition = initialPosition.position;
-        SetLines(currentPosition);
+        SetLines(center.position);
+
+        GameManager.instance.EnabledSlightShot(false);
     }
 
     void SetLines(Vector3 position) {
@@ -130,10 +131,5 @@ public class Peg : MonoBehaviour {
     Vector3 ClampBoundary(Vector3 vector) {
         vector.y = Mathf.Clamp(vector.y, bottomBoundary, 1000);
         return vector;
-    }
-
-    IEnumerator WaitAndReload() {
-        yield return new WaitForSeconds(3);
-        Instantiate(victory, new Vector3(-0.52f, 2.96f, 0), Quaternion.identity);
     }
 }

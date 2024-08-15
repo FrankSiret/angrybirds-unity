@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Pig : MonoBehaviour
@@ -11,13 +12,21 @@ public class Pig : MonoBehaviour
     private float _currentHealth;
     public GameObject deathEffect;
 
+    [SerializeField] public Sprite pigDamaged;
+
+    [SerializeField] private AudioClip _deathClip;
+
     public void Awake() {
         _currentHealth = _maxHealth;
     }
 
     public void TakeDamage(float damage) {
         _currentHealth -= damage;
-        Debug.Log($"health {_currentHealth}");
+
+        if(_currentHealth < _maxHealth / 2) {
+            GetComponent<SpriteRenderer>().sprite = pigDamaged;
+        }
+
         if(_currentHealth <= 0) {
             Die();
         }
@@ -26,16 +35,12 @@ public class Pig : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision) {
 
         SceneTransition sceneTransition = GetComponent<SceneTransition>();
-        Debug.Log($"sceneTransition {sceneTransition}");
         
         if(sceneTransition != null) {
-            Debug.Log("sceneTransition not Started");
             return;
         }
 
         float velocity = collision.relativeVelocity.magnitude;
-
-        Debug.Log($"velocity {velocity}");
 
         if(velocity > _damageThreshold) {
             TakeDamage(velocity);
@@ -43,8 +48,10 @@ public class Pig : MonoBehaviour
     }
 
     private void Die() {
+        GameManager.instance.RemovePig(this);
         Instantiate(deathEffect, transform.position, Quaternion.identity);
-        Destroy(gameObject, 0.1f);
+        AudioSource.PlayClipAtPoint(_deathClip, transform.position);
+        Destroy(gameObject);
     }
 
 }

@@ -3,7 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bird : MonoBehaviour {
+
+    [SerializeField] private AudioClip[] _hitClips;
+
+    private AudioSource _audioSource;
     private bool _collided;
+
+    private bool _sent;
+
+    // get collided
+    public bool GetCollided() {
+        return _collided;
+    }
+
+    void Awake() {
+        _collided = false;
+        _sent = false;
+        _audioSource = GetComponent<AudioSource>();
+    }
 
     public void Release() {
         PathPoints.instance.Clear();
@@ -19,6 +36,9 @@ public class Bird : MonoBehaviour {
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
+        if (!_collided || collision.relativeVelocity.magnitude > 3) {
+            SoundManager.instance.PlayRandomClip(_hitClips, _audioSource);
+        }
         _collided = true;
     }
 
@@ -27,42 +47,19 @@ public class Bird : MonoBehaviour {
         Rigidbody2D bird = GetComponent<Rigidbody2D>();
         if(bird == null) return;
 
-        if (_collided && noBodyMoving(false) ) {
+        // Debug.Log($"MOVING : {_collided && GameManager.instance.NoBodyMoving(true)}");
+
+        if (!_sent && _collided && GameManager.instance.NoBodyMoving(true) ) {
+            _sent = true;
             Camera.main.GetComponent<Camara>().ResetPosition();
             Destroy(gameObject, 2);
         }
 
         // if bird is off the scene then destroy it
-        if (transform.position.y < -6 && noBodyMoving(true)) {
+        if (!_sent && transform.position.y < -6 && GameManager.instance.NoBodyMoving(false)) {
+            _sent = true;
             Camera.main.GetComponent<Camara>().ResetPosition();
             Destroy(gameObject, 2);
         }
-    }
-
-    public float getAccelerate() {
-        Rigidbody2D bird = GetComponent<Rigidbody2D>();
-        return bird.velocity.magnitude;
-    }
-
-    public bool noBodyMoving(bool noCheckBird) {
-        Rigidbody2D bird = GetComponent<Rigidbody2D>();
-        Pig[] pigs = FindObjectsOfType<Pig>();
-        Glass[] glasses = FindObjectsOfType<Glass>();
-
-        for(int i = 0; i < pigs.Length; i++) {
-            if(pigs[i].GetComponent<Rigidbody2D>().velocity.magnitude >= 0.1f) {
-                Debug.Log("pig velocity: " + pigs[i].GetComponent<Rigidbody2D>().velocity.magnitude);
-                return false;
-            }
-        }
-        for(int i = 0; i < glasses.Length; i++) {
-            if(glasses[i].GetComponent<Rigidbody2D>().velocity.magnitude >= 0.1f) {
-                Debug.Log("glass velocity: " + glasses[i].GetComponent<Rigidbody2D>().velocity.magnitude);
-                return false;
-            }
-        }
-        if (!noCheckBird && bird != null)
-            Debug.Log("bird velocity: " + bird.velocity.magnitude);
-        return noCheckBird || bird == null || bird.velocity.magnitude < 0.1;
     }
 }
